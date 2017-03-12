@@ -1,0 +1,26 @@
+version: '2'
+services:
+    nginx:
+        image: nginx:1.11.10-alpine
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./nginx/htdocs/:/mnt/
+        ports:
+            - 80:80
+        links:
+            - django
+        tty: true
+        command: nginx -g 'daemon off';
+
+    django:
+        #build: ./cookdiary
+        image: schwul_django
+        volumes:
+            - ./cookdiary/:/mnt
+        env_file: ./db/.env
+        working_dir: /mnt
+        tty: true
+
+    db:
+        build: ./db
+        env_file: ./db/.env
